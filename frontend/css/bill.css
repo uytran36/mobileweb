@@ -6,7 +6,17 @@
     padding-right: 20px;
 }
 
+.bill-form {
+    padding: 10px 10px 10px 10px;
+    width:70%;
+    margin: auto auto;
+    border: 1px solid #000;
+    border-radius: 5px;
+}
 
+.g-3 {
+    padding-bottom: 2px;
+}
 
 .footer {
     background-color: rgb(230, 230, 230);

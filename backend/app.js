@@ -5,7 +5,7 @@ const routes = require('./routes/routes');
 
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/dbtemp', {useNewUrlParser: true})
+mongoose.connect('mongodb+srv://uytran:<uy12081999>@dbweb.htjgv.mongodb.net/dbweb?retryWrites=true&w=majority', {useNewUrlParser: true})
   .then(() => {
     console.log('Successfully connected to MongoDB Atlas!');
   })
