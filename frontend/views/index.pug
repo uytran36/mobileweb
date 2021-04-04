@@ -10,7 +10,7 @@ head
   .nav-bar
     nav.navbar.navbar-expand-lg.navbar-light.bg-light
       .container-fluid
-        a.navbar-brand(href='#')
+        a.navbar-brand(href='/')
           img(src='../public/img/logo.png' style='width: 30px; height: 30px')
         button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
           span.navbar-toggler-icon
@@ -22,9 +22,12 @@ head
               a.btn.btn-primary(href='/samsung' role='button') Samsung
             li.nav-item
               a.btn.btn-primary(href='/xiaomi' role='button') XiaoMi
-          form.d-flex
-            input.form-control.me-2(type='search' placeholder='Search' aria-label='Search')
-            button.btn.btn-outline-success(type='submit') Search
+          form#form-search.d-flex(method='GET' action='/search')
+            input.form-control.me-2(type='search' name='search' placeholder='Search' aria-label='Search')
+            button.btn.btn-outline-success(type='submit' value='Search') Search
+          a.btn.btn-primary(href="/login") Login
+          a.btn.btn-primary(href="/singup") Sign up
+            
 .main
   .container
     .func-bar
@@ -33,19 +36,19 @@ head
           #navbarNavDropdown.collapse.navbar-collapse
             ul.navbar-nav
               li.nav-item
-                a.nav-link.active(aria-current='page' href='#') D&#x1B0;&#x1EDB;i 3 tri&#x1EC7;u
+                a.nav-link.active(href='/sortBelow3') D&#x1B0;&#x1EDB;i 3 tri&#x1EC7;u
               li.nav-item
-                a.nav-link.active(href='#') T&#x1EEB; 3 tri&#x1EC7;u &dstrok;&#x1EBF;n 7 tri&#x1EC7;u
+                a.nav-link.active(href='/sortFrom3To7') T&#x1EEB; 3 tri&#x1EC7;u &dstrok;&#x1EBF;n 7 tri&#x1EC7;u
               li.nav-item
-                a.nav-link.active(href='#') Tr&ecirc;n 7 tri&#x1EC7;u
+                a.nav-link.active(href='/sortOver7') Tr&ecirc;n 7 tri&#x1EC7;u
               li.nav-item.dropdown
                 a#navbarDropdownMenuLink.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
                   | S&#x1EAF;p x&#x1EBF;p
                 ul.dropdown-menu(aria-labelledby='navbarDropdownMenuLink')
                   li
-                    a.dropdown-item(href='#') Gi&aacute; t&abreve;ng d&#x1EA7;n
+                    a.dropdown-item(href='/sortAsc') Gi&aacute; t&abreve;ng d&#x1EA7;n
                   li
-                    a.dropdown-item(href='#') Gi&aacute; gi&#x1EA3;m d&#x1EA7;n
+                    a.dropdown-item(href='/sortDes') Gi&aacute; gi&#x1EA3;m d&#x1EA7;n
     .list-products
       .row
         each product in products
@@ -55,7 +58,7 @@ head
               h5.card-title=product.title
               p.card-text=product.description
               p.card-text.price=product.price
-              a.btn.btn-primary(href='#') Mua ngay
+              a.btn.btn-primary(href='/bill/'+product._id value=product._id) Mua ngay
         
 .footer
   p.copyright © 2021 Phone Web

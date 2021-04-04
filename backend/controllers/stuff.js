@@ -1,6 +1,7 @@
 const Product = require('../models/products');
 const { render } = require('pug');
 
+
 exports.createProduct = (req, res, next) => {
     const product = new Product({
         title: req.body.title,
@@ -29,6 +30,14 @@ exports.getAllProducts = (req, res, next) => {
             res.render('index', {
                 products: products
             });
+            
+            if (typeof localStorage === "undefined" || localStorage === null) {
+                const LocalStorage = require('node-localstorage').LocalStorage;
+                localStorage = new LocalStorage('./scratch');
+            }
+            
+            localStorage.setItem('listProduct', JSON.stringify(products));
+            //console.log(localStorage.getItem('listProduct'));
         }
     ).catch(
         (error) => {
@@ -37,6 +46,7 @@ exports.getAllProducts = (req, res, next) => {
             });
         }
     );
+    
 };
 
 exports.getOneProduct = (req, res, next) => {
@@ -99,6 +109,13 @@ exports.getIPhoneProducts = (req, res, next) => {
             res.render('index', {
                 products: products
             });
+
+            if (typeof localStorage === "undefined" || localStorage === null) {
+                const LocalStorage = require('node-localstorage').LocalStorage;
+                localStorage = new LocalStorage('./scratch');
+            }
+            
+            localStorage.setItem('listProduct', JSON.stringify(products));
         }
     ).catch(
         (error) => {
@@ -117,6 +134,13 @@ exports.getSamsungProducts = (req, res, next) => {
             res.render('index', {
                 products: products
             });
+
+            if (typeof localStorage === "undefined" || localStorage === null) {
+                const LocalStorage = require('node-localstorage').LocalStorage;
+                localStorage = new LocalStorage('./scratch');
+            }
+            
+            localStorage.setItem('listProduct', JSON.stringify(products));
         }
     ).catch(
         (error) => {
@@ -135,6 +159,13 @@ exports.getXiaomiProducts = (req, res, next) => {
             res.render('index', {
                 products: products
             });
+
+            if (typeof localStorage === "undefined" || localStorage === null) {
+                const LocalStorage = require('node-localstorage').LocalStorage;
+                localStorage = new LocalStorage('./scratch');
+            }
+            
+            localStorage.setItem('listProduct', JSON.stringify(products));
         }
     ).catch(
         (error) => {
@@ -146,19 +177,99 @@ exports.getXiaomiProducts = (req, res, next) => {
 }
 
 exports.findByName = (req, res, next) => {
+    var searchQuery = req.query.search;
     Product.find({
-        title: req.params.query
+        title:{$regex: searchQuery, $options: 'i'}
     }).then(
         (products) => {
             res.render('index', {
                 products: products
             });
+
+            if (typeof localStorage === "undefined" || localStorage === null) {
+                const LocalStorage = require('node-localstorage').LocalStorage;
+                localStorage = new LocalStorage('./scratch');
+            }
+            
+            localStorage.setItem('listProduct', JSON.stringify(products));
         }
     ).catch(
         (error) => {
-            res.status(404).json({
+            res.status(400).json({
                 error: error
             });
         }
     );
+}
+
+exports.sortAsc = (req, res, next) => {
+    var listProduct = JSON.parse(localStorage.getItem('listProduct'));
+    listProduct.sort(function(a, b){
+        return a.price- b.price;
+    });
+    res.render('index', {
+        products: listProduct
+    });
+}
+
+exports.sortDes = (req, res, next) => {
+    var listProduct = JSON.parse(localStorage.getItem('listProduct'));
+    listProduct.sort(function(a, b){
+        return b.price- a.price;
+    });
+    res.render('index', {
+        products: listProduct
+    });
+}
+
+exports.sortBelow3 = (req, res, next) => {
+    var listProduct = JSON.parse(localStorage.getItem('listProduct'));
+    var results = [];
+    var searchField = "price";
+    var searchVal = 3000000;
+    
+    for (var i = 0 ; i < listProduct.length ; i++) {
+        if (listProduct[i][searchField] <= searchVal) {
+            results.push(listProduct[i]);
+        }
+    }
+
+    res.render('index', {
+        products: results
+    });
+}
+
+exports.sortFrom3To7 = (req, res, next) => {
+    var listProduct = JSON.parse(localStorage.getItem('listProduct'));
+    var results = [];
+    var searchField = "price";
+    var fromValue = 3000000;
+    var toValue = 7000000
+    
+    for (var i = 0 ; i < listProduct.length ; i++) {
+        if (listProduct[i][searchField] >= fromValue && listProduct[i][searchField] <= toValue) {
+            results.push(listProduct[i]);
+        }
+    }
+
+    res.render('index', {
+        products: results
+    });
+}
+
+exports.sortOver7 = (req, res, next) => {
+    var listProduct = JSON.parse(localStorage.getItem('listProduct'));
+    var results = [];
+    var searchField = "price";
+    var searchVal = 7000000;
+    
+    for (var i = 0 ; i < listProduct.length ; i++) {
+        if (listProduct[i][searchField] >= searchVal) {
+            results.push(listProduct[i]);
+        }
+    }
+
+    res.render('index', {
+        products: results
+    });
 }

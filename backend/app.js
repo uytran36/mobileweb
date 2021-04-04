@@ -1,10 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const routes = require('./routes/products');
-
+const productRoutes = require('./routes/products');
 const mongoose = require('mongoose');
 
+//const cookieParser = require('cookie-parser');
+//const session = require('express-session');
 
 mongoose.connect('mongodb://localhost:27017/dbweb', {useNewUrlParser: true})
   .then(() => {
@@ -27,7 +28,12 @@ app.set("view engine", "pug");
 app.set("views", "../frontend/views");
 app.use(express.static('../frontend'));
 
-app.use(bodyParser.json());
-app.use('/', routes);
+app.use(bodyParser.urlencoded());
+// app.use(bodyParser.json());
+app.use('/', productRoutes);
+
+
+// app.use(cookieParser());
+// app.use(session({secret: '12345'}));
 
 module.exports = app;
