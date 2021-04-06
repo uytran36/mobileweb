@@ -1,19 +1,17 @@
 const Product = require('../models/products');
 const { render } = require('pug');
 
-
 exports.createProduct = (req, res, next) => {
     const product = new Product({
         title: req.body.title,
         description: req.body.description,
+        type: req.body.type,
         imageUrl: req.body.imageUrl,
         price: req.body.price
     });
     product.save().then(
         () => {
-            res.status(201).json({
-                message: 'Post saved successfully!'
-            });
+            res
         }
     ).catch(
         (error) => {

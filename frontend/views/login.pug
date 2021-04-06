@@ -25,16 +25,16 @@ head
           form.d-flex
             input.form-control.me-2(type='search' placeholder='Search' aria-label='Search')
             button.btn.btn-outline-success(type='submit') Search
-          a.btn.btn-primary(href="/login") Login
-          a.btn.btn-primary(href="/login") Sign up
+          a.btn.btn-primary(href="/admin") Login
+
 .main
   .container(style='width: 100%;')
-    form
+    form(method="POST" action="/admin/loggedin")
       .form-floating.mb-3
-        input#floatingInput.form-control(type='username' placeholder='username')
+        input#floatingInput.form-control(type='text' name='username' placeholder='Username')
         label(for='floatingInput') Username
       .form-floating
-        input#floatingPassword.form-control(type='password' placeholder='Password')
+        input#floatingPassword.form-control(type='password' name='password' placeholder='Password')
         label(for='floatingPassword') Password
       button.btn.btn-primary(type='submit' style='display: block; margin: 10px auto;') Login
 script(src='https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js' integrity='sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG' crossorigin='anonymous')

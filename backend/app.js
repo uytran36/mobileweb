@@ -3,9 +3,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const productRoutes = require('./routes/products');
 const mongoose = require('mongoose');
+const userRoutes = require('./routes/user');
+const session = require('express-session');
 
-//const cookieParser = require('cookie-parser');
-//const session = require('express-session');
 
 mongoose.connect('mongodb://localhost:27017/dbweb', {useNewUrlParser: true})
   .then(() => {
@@ -24,13 +24,20 @@ app.use((req, res, next) => {
 });
 
 
+app.use(session({
+  secret: 'mySecretKey',
+  resave: true,
+  saveUninitialized: false
+}));
 app.set("view engine", "pug");
 app.set("views", "../frontend/views");
 app.use(express.static('../frontend'));
 
 app.use(bodyParser.urlencoded());
-// app.use(bodyParser.json());
+
 app.use('/', productRoutes);
+app.use('/admin', userRoutes);
+
 
 
 // app.use(cookieParser());
