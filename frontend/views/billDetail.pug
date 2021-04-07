@@ -5,7 +5,7 @@ head
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
   link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6' crossorigin='anonymous')
   link(href='/public/css/style.css' rel='stylesheet' type='text/css')
-  title Detail phone
+  title Detail bill
 .header
   .nav-bar
     nav.navbar.navbar-expand-lg.navbar-light.bg-light
@@ -25,28 +25,41 @@ head
           a.btn.btn-primary(href='/admin/logout' role='button') Logout
 .main
   .container
-    form(method="POST" action="/admin/listproduct")
+    form(method="POST" action="/admin/listbill")
       .mb-3
-        label.form-label(for='title') Title
-        input#title.form-control(type='text' name='title' placeholder='Title' aria-label='title' value=product.title)
+        label.form-label(for='name') Name
+        input#title.form-control(type='text' name='name' placeholder='Name' aria-label='name' value=bill.name)
       .mb-3
-        label.form-label(for='type') Type
-        input#title.form-control(type='text' name='type' placeholder='Title' aria-label='title' value=product.title)
+        label.form-label(for='type') Phone
+        input#title.form-control(type='text' name='phone' placeholder='Phone' aria-label='phone' value=bill.phone)
       .mb-3
-        label.form-label(for='imageUrl') Image url
-        input#title.form-control(type='text' name='imageUrl' placeholder='Title' aria-label='title' value=product.imageUrl)
+        label.form-label(for='email') Email
+        input#title.form-control(type='email' name='email' placeholder='Email' aria-label='email' value=bill.email)
+      .mb-3
+        label.form-label(for='address') Address 
+        input#title.form-control(type='text' name='address' placeholder='Address' aria-label='address' value=bill.address)
       .mb-3
         label.form-label(for='price') Price
-        input#title.form-control(type='text' name='price' placeholder='Title' aria-label='title' value=product.price)
-      .mb-3
-        label.form-label(for='description') Description
-        input#title.form-control(type='text' name='description' placeholder='Title' aria-label='title' value=product.description)
+        input#title.form-control(type='text' name='price' placeholder='Price' aria-label='price' value=bill.price)
       button#btn-submit.btn.btn-primary(type='submit') Save
-      a#btn-delete.btn.btn-primary(href="/admin/deleteproduct") Delete
-      
+      a#btn-delete.btn.btn-primary(href="/admin/deletebill") Delete
+    
+    .card(style='width: 18rem;')
+      .card-body
+        h5.card-title=product.title
+        p.card-text=product.description
+        p.card-text.price=product.price
 
 .footer
   p.copyright © 2021 Phone Web
 script(src='https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js' integrity='sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG' crossorigin='anonymous')
 script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js' integrity='sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc' crossorigin='anonymous')
 script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js' integrity='sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf' crossorigin='anonymous')
+script.
+  let x = document.querySelectorAll(".price");
+  for (let i = 0, len = x.length; i < len; i++) {
+  let num = Number(x[i].innerHTML)
+  .toLocaleString('en');
+  x[i].innerHTML = num;
+  x[i].classList.add("currSign");
+  }

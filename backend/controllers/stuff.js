@@ -63,42 +63,6 @@ exports.getOneProduct = (req, res, next) => {
     );
 };
 
-exports.modifyProduct = (req, res, next) => {
-    const product = new Product({
-        _id: req.params.id,
-        title: req.body.title,
-        description: req.body.description,
-        type: req.body.type,
-        imageUrl: req.body.imageUrl,
-        price: req.body.price,
-    });
-    Product.updateOne({_id: req.params.id}, product).then(
-        () => {
-            res.status(201).json({
-                message: 'Updated successfully!'
-            });
-        }
-    ).catch(
-        (error) => {
-            res.status(400).json(error);
-        }
-    );
-};
-
-exports.deleteProduct = (req, res, next) => {
-    Product.remove({_id: req.params.id}).then(
-        () => {
-            res.status(201).json({
-                message: 'deleted!'
-            })
-        }
-    ).catch(
-        (error) => {
-            res.status(400).json(error);
-        }
-    );
-};
-
 exports.getIPhoneProducts = (req, res, next) => {
     Product.find({
         type: 'iphone'

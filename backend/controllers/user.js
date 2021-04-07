@@ -109,8 +109,7 @@ exports.loggedin = (req,res, next) => {
         return res.render('loginFail');
       }
       req.session.isLoggedIn = true;
-      console.log(req.session.isLoggedIn);
-      res.redirect('/admin/loggedIn');
+      res.redirect('/admin/logIn');
     }
   ).catch(
     (error) => {
@@ -125,7 +124,6 @@ exports.login = (req,res, next) => {
   if(req.session.isLoggedIn) {
     Product.find().then(
       (products) => {
-        console.log(req.session.isLoggedIn);
         res.render('indexAdmin', {
             products: products
         });
@@ -146,7 +144,6 @@ exports.login = (req,res, next) => {
 
 exports.logout = (req, res, next) => {
   req.session.isLoggedIn = false;
-  console.log(req.session.isLoggedIn);
   res.redirect('/admin');
 }
 
@@ -156,13 +153,6 @@ exports.getAllProducts = (req, res, next) => {
           res.render('indexAdmin', {
               products: products
           });
-          
-          if (typeof localStorage === "undefined" || localStorage === null) {
-              const LocalStorage = require('node-localstorage').LocalStorage;
-              localStorage = new LocalStorage('./scratch');
-          }
-          
-          localStorage.setItem('listProduct', JSON.stringify(products));
       }
   ).catch(
       (error) => {
@@ -180,6 +170,13 @@ exports.getOneProduct = (req, res, next) => {
   }).then(
       (product) => {
           res.render('detail', {product: product});
+
+          if (typeof localStorage === "undefined" || localStorage === null) {
+            const LocalStorage = require('node-localstorage').LocalStorage;
+            localStorage = new LocalStorage('./scratch');
+          }
+          
+          localStorage.setItem('product', JSON.stringify(product));
       }
   ).catch(
       (error) => {
@@ -191,17 +188,21 @@ exports.getOneProduct = (req, res, next) => {
 };
 
 exports.modifyProduct = (req, res, next) => {
+  var p = JSON.parse(localStorage.getItem('product'));
+
   const product = new Product({
-      _id: req.params.id,
+      _id: p._id,
       title: req.body.title,
       description: req.body.description,
       type: req.body.type,
       imageUrl: req.body.imageUrl,
       price: req.body.price,
   });
-  Product.updateOne({_id: req.params.id}, product).then(
+  
+  Product.updateOne({_id: p._id}, product).then(
       () => {
-          res.redirect('/admin/loggedIn');
+        console.log("updated!");
+        res.redirect('/admin/listproduct');
       }
   ).catch(
       (error) => {
@@ -209,6 +210,10 @@ exports.modifyProduct = (req, res, next) => {
       }
   );
 };
+
+exports.addProduct = (req, res, next) => {
+  res.render('addProduct');
+}
 
 exports.createProduct = (req, res, next) => {
   const product = new Product({
@@ -220,13 +225,110 @@ exports.createProduct = (req, res, next) => {
   });
   product.save().then(
       () => {
-          res.redirect('/admin/loggedIn');
+          res.redirect('/admin/listproduct');
       }
   ).catch(
       (error) => {
           res.status(400).json({
               error: error
           });
+      }
+  );
+};
+
+exports.deleteProduct = (req, res, next) => {
+  var p = JSON.parse(localStorage.getItem('product'));
+
+  Product.remove({_id: p._id}).then(
+      () => {
+        console.log("deleted!");
+        res.redirect('/admin/listproduct');
+      }
+  ).catch(
+      (error) => {
+          res.status(400).json(error);
+      }
+  );
+};
+
+
+exports.getAllBills = (req, res, next) => {
+  Bill.find().then(
+      (bills) => {
+          res.render('listBill', {
+              bills: bills
+          });
+      }
+  ).catch(
+      (error) => {
+          res.status(400).json({
+              error: error
+          });
+      }
+  );
+};
+
+
+exports.getOneBill = (req, res, next) => {
+  Bill.findOne({
+      _id: req.params.id
+  }).then(
+      (bill) => {
+          res.render('billDetail', {bill: bill, product: bill.product});
+
+          if (typeof localStorage === "undefined" || localStorage === null) {
+            const LocalStorage = require('node-localstorage').LocalStorage;
+            localStorage = new LocalStorage('./scratch');
+          }
+          
+          localStorage.setItem('bill', JSON.stringify(bill));
+      }
+  ).catch(
+      (error) => {
+          res.status(404).json({ 
+              error: error
+          });
+      }
+  );
+};
+
+
+exports.modifyBill = (req, res, next) => {
+  var b = JSON.parse(localStorage.getItem('bill'));
+
+  const bill = new Bill({
+      _id: b._id,
+      name: req.body.name,
+      phone: req.body.phone,
+      email: req.body.email,
+      address: req.body.address,
+      product: b.product,
+      price: req.body.price,
+  });
+  
+  Bill.updateOne({_id: b._id}, bill).then(
+      () => {
+        console.log("updated!");
+        res.redirect('/admin/listbill');
+      }
+  ).catch(
+      (error) => {
+          res.status(400).json(error);
+      }
+  );
+};
+
+exports.deleteBill = (req, res, next) => {
+  var b = JSON.parse(localStorage.getItem('bill'));
+
+  Bill.remove({_id: b._id}).then(
+      () => {
+        console.log("deleted!");
+        res.redirect('/admin/listbill');
+      }
+  ).catch(
+      (error) => {
+          res.status(400).json(error);
       }
   );
 };
